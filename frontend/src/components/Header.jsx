@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 import CartContext from '../context/CartContext';
-import { FaShoppingCart, FaStore } from 'react-icons/fa';
+import { FaShoppingCart, FaStore, FaChevronDown, FaRegUser, FaSignOutAlt, FaBox } from 'react-icons/fa';
 
 const Header = () => {
     const { user, logout } = useContext(AuthContext);
@@ -36,28 +36,41 @@ const Header = () => {
                     </Link>
 
                     {user ? (
-                        <div className="flex items-center gap-4">
-                            {user.role === 'shopkeeper' && (
-                                <Link to="/shop/dashboard" className="text-gray-600 hover:text-indigo-600 font-medium transition">
-                                    My Shop
-                                </Link>
-                            )}
-                            {user.role === 'admin' && (
-                                <Link to="/admin/dashboard" className="text-gray-600 hover:text-indigo-600 font-medium transition">
-                                    Admin
-                                </Link>
-                            )}
+                        <div className="relative group">
+                            <button
+                                className="flex items-center gap-2 text-gray-700 font-medium hover:text-indigo-600 transition focus:outline-none"
+                            >
+                                <div className="bg-gray-100 p-2 rounded-full">
+                                    <FaRegUser className="text-lg" />
+                                </div>
+                                <span>{user.name.split(' ')[0]}</span>
+                                <FaChevronDown className="text-xs mt-1" />
+                            </button>
 
-                            <div className="flex items-center gap-3">
-                                <span className="text-gray-700 font-medium hidden md:block">Hi, {user.name.split(' ')[0]}</span>
-                                <Link to="/myorders" className="text-gray-600 hover:text-indigo-600 text-sm font-medium transition">
-                                    My Orders
+                            {/* Dropdown Menu */}
+                            <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-lg shadow-xl border border-gray-100 py-2 hidden group-hover:block transition-all z-50">
+                                <div className="px-4 py-3 border-b border-gray-100 mb-2">
+                                    <p className="text-sm font-bold text-gray-900">My Account</p>
+                                    <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                                </div>
+
+                                <Link to="/myorders" className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-indigo-600 text-sm transition transition-colors">
+                                    <FaBox className="text-gray-400" /> My Orders
                                 </Link>
+
+                                {user.role === 'shopkeeper' && (
+                                    <Link to="/shop/dashboard" className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-indigo-600 text-sm transition">
+                                        <FaStore className="text-gray-400" /> My Shop
+                                    </Link>
+                                )}
+
+                                <div className="border-t border-gray-100 my-2"></div>
+
                                 <button
                                     onClick={handleLogout}
-                                    className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition duration-300 text-sm font-medium"
+                                    className="w-full text-left flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-red-600 text-sm transition"
                                 >
-                                    Logout
+                                    <FaSignOutAlt className="text-gray-400" /> Log Out
                                 </button>
                             </div>
                         </div>
