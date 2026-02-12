@@ -20,6 +20,7 @@ const getProducts = asyncHandler(async (req, res) => {
 
     const count = await Product.countDocuments({ ...keyword });
     const products = await Product.find({ ...keyword })
+        .populate('shop', 'name')
         .limit(pageSize)
         .skip(pageSize * (page - 1));
 
@@ -30,7 +31,7 @@ const getProducts = asyncHandler(async (req, res) => {
 // @route   GET /api/products/:id
 // @access  Public
 const getProductById = asyncHandler(async (req, res) => {
-    const product = await Product.findById(req.params.id);
+    const product = await Product.findById(req.params.id).populate('shop', 'name');
 
     if (product) {
         res.json(product);

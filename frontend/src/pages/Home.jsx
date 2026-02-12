@@ -98,7 +98,7 @@ const Home = () => {
 
                                     <div className="flex items-center gap-2 text-sm text-gray-500 mb-3">
                                         <FaStore />
-                                        <span className="truncate">Local Shop</span>
+                                        <span className="truncate">{product.shop ? product.shop.name : 'Local Shop'}</span>
                                     </div>
 
                                     <div className="mt-auto flex justify-between items-end">
