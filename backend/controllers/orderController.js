@@ -30,6 +30,8 @@ const addOrderItems = asyncHandler(async (req, res) => {
             taxPrice,
             shippingPrice,
             totalPrice,
+            // isPaid: paymentMethod === 'Cash On Delivery' ? false : true,
+            // paidAt: paymentMethod === 'Cash On Delivery' ? null : Date.now(),
         });
 
         try {

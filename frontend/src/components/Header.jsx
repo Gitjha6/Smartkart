@@ -50,6 +50,9 @@ const Header = () => {
 
                             <div className="flex items-center gap-3">
                                 <span className="text-gray-700 font-medium hidden md:block">Hi, {user.name.split(' ')[0]}</span>
+                                <Link to="/myorders" className="text-gray-600 hover:text-indigo-600 text-sm font-medium transition">
+                                    My Orders
+                                </Link>
                                 <button
                                     onClick={handleLogout}
                                     className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition duration-300 text-sm font-medium"
