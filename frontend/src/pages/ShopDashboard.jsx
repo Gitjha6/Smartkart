@@ -4,6 +4,7 @@ import AuthContext from '../context/AuthContext';
 import { shopService, productService, orderService } from '../services/api';
 import { FaStore, FaPlus, FaBoxOpen, FaEdit, FaTrash, FaList, FaCheck, FaTimes } from 'react-icons/fa';
 import AddProduct from '../components/AddProduct';
+import ShopForm from '../components/ShopForm';
 
 const ShopDashboard = () => {
     const { user, login } = useContext(AuthContext);
@@ -21,13 +22,9 @@ const ShopDashboard = () => {
     const initialTab = queryParams.get('tab') === 'orders' ? 'orders' : 'products';
     const [activeTab, setActiveTab] = useState(initialTab);
 
-    // Form states for creating shop
-    const [shopName, setShopName] = useState('');
-    const [address, setAddress] = useState('');
-    const [city, setCity] = useState('');
-    const [state, setState] = useState('');
-    const [pincode, setPincode] = useState('');
-    const [description, setDescription] = useState('');
+    // No longer need individual states for form fields as ShopForm handles them internally
+    // but we can keep them if we want, or just rely on ShopForm's internal state.
+    // Simplifying: we'll just pass a handler to ShopForm.
 
     useEffect(() => {
         if (!user) return;
@@ -65,36 +62,17 @@ const ShopDashboard = () => {
         }
     };
 
-    const handleCreateShop = async (e) => {
-        e.preventDefault();
+    const handleCreateShop = async (formData) => {
         try {
-            // For location, we are dummying it for now.
-            const dummyLat = 28.7041;
-            const dummyLng = 77.1025;
-
-            const shopData = {
-                name: shopName,
-                address,
-                city,
-                state,
-                pincode,
-                description,
-                latitude: dummyLat,
-                longitude: dummyLng
-            };
-
-            const { data } = await shopService.create(shopData);
+            const { data } = await shopService.create(formData);
             setShop(data);
             setCreateMode(false);
-            alert("Shop created successfully!");
+            // Update user context if possible, or just reload
+            // window.location.reload();
+            // Better:
+            fetchShopData(data._id);
         } catch (error) {
-            console.error("Failed to create shop", error);
-            const errMsg = error.response?.data?.message || "Error creating shop";
-            alert(errMsg);
-
-            if (errMsg === 'User already has a shop') {
-                window.location.reload();
-            }
+            alert(error.response?.data?.message || 'Failed to create shop');
         }
     };
 
@@ -180,8 +158,11 @@ const ShopDashboard = () => {
                     <div className="flex justify-between items-center mb-6">
                         <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2"><FaBoxOpen /> Your Products</h2>
                         <button
-                            onClick={() => setShowAddProduct(true)}
-                            className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md flex items-center gap-2 transition"
+                            onClick={() => {
+                                setEditingProduct(null);
+                                setShowAddProduct(true);
+                            }}
+                            className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition flex items-center gap-2"
                         >
                             <FaPlus /> Add Product
                         </button>
@@ -247,6 +228,7 @@ const ShopDashboard = () => {
                     )}
                 </>
             ) : (
+                /* Orders Tab Content */
                 <>
                     <div className="flex justify-between items-center mb-6">
                         <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2"><FaList /> Received Orders</h2>

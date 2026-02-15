@@ -71,6 +71,9 @@ const Header = () => {
                                             <Link to="/shop/dashboard?tab=orders" className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-indigo-600 text-sm transition">
                                                 <FaList className="text-gray-400" /> Received Orders
                                             </Link>
+                                            <Link to="/shop/settings" className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-indigo-600 text-sm transition">
+                                                <FaStore className="text-gray-400" /> Shop Settings
+                                            </Link>
                                         </>
                                     )}
 
