@@ -35,7 +35,7 @@ export const CartProvider = ({ children }) => {
             name: product.name,
             image: product.image,
             price: product.price,
-            shop: product.shop, // Ensure product has shop ID
+            shop: product.shop && product.shop._id ? product.shop._id : product.shop, // Ensure we get the ID string/ObjectId, not the full object
             countInStock: product.countInStock,
             qty: Number(qty),
         };
