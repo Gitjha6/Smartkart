@@ -49,38 +49,40 @@ const Header = () => {
                                 <FaChevronDown className="text-xs mt-1" />
                             </button>
 
-                            {/* Dropdown Menu */}
-                            <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-lg shadow-xl border border-gray-100 py-2 hidden group-hover:block transition-all z-50">
-                                <div className="px-4 py-3 border-b border-gray-100 mb-2">
-                                    <p className="text-sm font-bold text-gray-900">My Account</p>
-                                    <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                            {/* Dropdown Menu Wrapper with bridge (pt-2) */}
+                            <div className="absolute right-0 top-full pt-2 w-56 hidden group-hover:block z-50">
+                                <div className="bg-white rounded-lg shadow-xl border border-gray-100 py-2">
+                                    <div className="px-4 py-3 border-b border-gray-100 mb-2">
+                                        <p className="text-sm font-bold text-gray-900">My Account</p>
+                                        <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                                    </div>
+
+                                    {user.role !== 'shopkeeper' && (
+                                        <Link to="/myorders" className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-indigo-600 text-sm transition transition-colors">
+                                            <FaBox className="text-gray-400" /> My Orders
+                                        </Link>
+                                    )}
+
+                                    {user.role === 'shopkeeper' && (
+                                        <>
+                                            <Link to="/shop/dashboard" className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-indigo-600 text-sm transition">
+                                                <FaStore className="text-gray-400" /> My Shop
+                                            </Link>
+                                            <Link to="/shop/dashboard?tab=orders" className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-indigo-600 text-sm transition">
+                                                <FaList className="text-gray-400" /> Received Orders
+                                            </Link>
+                                        </>
+                                    )}
+
+                                    <div className="border-t border-gray-100 my-2"></div>
+
+                                    <button
+                                        onClick={handleLogout}
+                                        className="w-full text-left flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-red-600 text-sm transition"
+                                    >
+                                        <FaSignOutAlt className="text-gray-400" /> Log Out
+                                    </button>
                                 </div>
-
-                                {user.role !== 'shopkeeper' && (
-                                    <Link to="/myorders" className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-indigo-600 text-sm transition transition-colors">
-                                        <FaBox className="text-gray-400" /> My Orders
-                                    </Link>
-                                )}
-
-                                {user.role === 'shopkeeper' && (
-                                    <>
-                                        <Link to="/shop/dashboard" className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-indigo-600 text-sm transition">
-                                            <FaStore className="text-gray-400" /> My Shop
-                                        </Link>
-                                        <Link to="/shop/dashboard?tab=orders" className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-indigo-600 text-sm transition">
-                                            <FaList className="text-gray-400" /> Received Orders
-                                        </Link>
-                                    </>
-                                )}
-
-                                <div className="border-t border-gray-100 my-2"></div>
-
-                                <button
-                                    onClick={handleLogout}
-                                    className="w-full text-left flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-red-600 text-sm transition"
-                                >
-                                    <FaSignOutAlt className="text-gray-400" /> Log Out
-                                </button>
                             </div>
                         </div>
                     ) : (
