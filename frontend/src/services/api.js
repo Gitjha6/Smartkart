@@ -40,6 +40,7 @@ export const orderService = {
     getOrderById: (id) => api.get(`/orders/${id}`),
     payOrder: (id, paymentResult) => api.put(`/orders/${id}/pay`, paymentResult),
     getMyOrders: () => api.get('/orders/myorders'),
+    getShopOrders: () => api.get('/orders/shop-orders'),
 };
 
 export default api;

@@ -2,7 +2,9 @@ import { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 import CartContext from '../context/CartContext';
-import { FaShoppingCart, FaStore, FaChevronDown, FaRegUser, FaSignOutAlt, FaBox } from 'react-icons/fa';
+import { FaShoppingCart, FaStore, FaChevronDown, FaRegUser, FaSignOutAlt, FaBox, FaList } from 'react-icons/fa';
+
+import logo from '../assets/logo.png';
 
 const Header = () => {
     const { user, logout } = useContext(AuthContext);
@@ -15,10 +17,10 @@ const Header = () => {
     };
 
     return (
-        <header className="bg-white shadow-md sticky top-0 z-50">
+        <header className="bg-white sticky top-0 z-50 border-b border-gray-100">
             <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-                <Link to="/" className="text-2xl font-bold text-indigo-600 flex items-center gap-2">
-                    <FaStore /> SmartKart
+                <Link to="/" className="flex items-center gap-2">
+                    <img src={logo} alt="SmartKart" className="h-16 md:h-20 object-contain" />
                 </Link>
 
                 <nav className="flex items-center space-x-6">
@@ -54,14 +56,21 @@ const Header = () => {
                                     <p className="text-xs text-gray-500 truncate">{user.email}</p>
                                 </div>
 
-                                <Link to="/myorders" className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-indigo-600 text-sm transition transition-colors">
-                                    <FaBox className="text-gray-400" /> My Orders
-                                </Link>
+                                {user.role !== 'shopkeeper' && (
+                                    <Link to="/myorders" className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-indigo-600 text-sm transition transition-colors">
+                                        <FaBox className="text-gray-400" /> My Orders
+                                    </Link>
+                                )}
 
                                 {user.role === 'shopkeeper' && (
-                                    <Link to="/shop/dashboard" className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-indigo-600 text-sm transition">
-                                        <FaStore className="text-gray-400" /> My Shop
-                                    </Link>
+                                    <>
+                                        <Link to="/shop/dashboard" className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-indigo-600 text-sm transition">
+                                            <FaStore className="text-gray-400" /> My Shop
+                                        </Link>
+                                        <Link to="/shop/dashboard?tab=orders" className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-indigo-600 text-sm transition">
+                                            <FaList className="text-gray-400" /> Received Orders
+                                        </Link>
+                                    </>
                                 )}
 
                                 <div className="border-t border-gray-100 my-2"></div>

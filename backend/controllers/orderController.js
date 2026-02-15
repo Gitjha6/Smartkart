@@ -95,9 +95,33 @@ const getMyOrders = asyncHandler(async (req, res) => {
     res.json(orders);
 });
 
+// @desc    Get orders for the logged-in shopkeeper
+// @route   GET /api/orders/shop-orders
+// @access  Private/Shopkeeper
+const getShopOrders = asyncHandler(async (req, res) => {
+    // 1. Find the shop owned by the user (or use user.shopDetails if reliable)
+    // We'll search by owner to be safe
+    const Shop = require('../models/Shop'); // Lazy load or move to top
+    const shop = await Shop.findOne({ owner: req.user._id });
+
+    if (!shop) {
+        res.status(404);
+        throw new Error('Shop not found for this user');
+    }
+
+    // 2. Find orders where orderItems contains this shop ID
+    // orderItems.shop is the field
+    const orders = await Order.find({ 'orderItems.shop': shop._id })
+        .populate('user', 'name email')
+        .sort({ createdAt: -1 });
+
+    res.json(orders);
+});
+
 module.exports = {
     addOrderItems,
     getOrderById,
     updateOrderToPaid,
     getMyOrders,
+    getShopOrders,
 };
