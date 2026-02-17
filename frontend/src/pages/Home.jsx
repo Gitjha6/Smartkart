@@ -35,6 +35,8 @@ const Home = () => {
         alert(`${product.name} added to cart!`);
     };
 
+
+
     return (
         <div>
             {/* Hero Section */}
@@ -61,12 +63,16 @@ const Home = () => {
                     >
                         Search
                     </button>
+
                 </form>
             </div>
 
+
+
             {/* Product Grid */}
             <div className="mb-4 flex items-center gap-2 text-gray-600">
-                <FaMapMarkerAlt /> Showing results for <span className="font-bold text-gray-800">New Delhi</span> (Dummy Location)
+                {/* Removed dummy location text to avoid confusion */}
+                <h2 className="text-2xl font-bold text-gray-800">Featured Products</h2>
             </div>
 
             {loading ? (

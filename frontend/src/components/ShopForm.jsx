@@ -66,6 +66,8 @@ const ShopForm = ({ initialData = {}, onSubmit, onCancel, submitLabel = "Save De
                     <input type="text" name="pincode" value={formData.pincode} onChange={handleChange} required className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 border p-2" />
                 </div>
             </div>
+
+
             {/* Hidden Lat/Lng for now or auto-filled */}
 
             <div className="flex gap-4 pt-2">

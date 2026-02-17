@@ -93,6 +93,34 @@ const ShopDashboard = () => {
         setShowAddProduct(true);
     };
 
+    const handleStatusChange = async (orderId, newStatus) => {
+        try {
+            await orderService.updateStatus(orderId, newStatus);
+            // Optimistic update or refetch
+            setOrders(orders.map(order =>
+                order._id === orderId ? { ...order, orderStatus: newStatus } : order
+            ));
+        } catch (error) {
+            console.error("Failed to update status", error);
+            alert("Failed to update status");
+        }
+    };
+
+    const handleMarkAsPaid = async (orderId) => {
+        if (window.confirm("Are you sure you want to mark this order as PAID?")) {
+            try {
+                await orderService.markAsPaid(orderId);
+                // Optimistic update
+                setOrders(orders.map(order =>
+                    order._id === orderId ? { ...order, isPaid: true, paidAt: Date.now() } : order
+                ));
+            } catch (error) {
+                console.error("Failed to mark as paid", error);
+                alert("Failed to mark as paid");
+            }
+        }
+    };
+
     if (loading) return <div className="text-center mt-10">Loading...</div>;
 
     if (createMode && !shop) {
@@ -239,6 +267,7 @@ const ShopDashboard = () => {
                                             <th className="p-4 font-semibold text-gray-600">Customer</th>
                                             <th className="p-4 font-semibold text-gray-600">Items</th>
                                             <th className="p-4 font-semibold text-gray-600">Total</th>
+                                            <th className="p-4 font-semibold text-gray-600">Status</th>
                                             <th className="p-4 font-semibold text-gray-600">Paid</th>
                                             <th className="p-4 font-semibold text-gray-600">Date</th>
                                         </tr>
@@ -265,14 +294,34 @@ const ShopDashboard = () => {
                                                 </td>
                                                 <td className="p-4 font-bold text-gray-800">₹{order.totalPrice}</td>
                                                 <td className="p-4">
+                                                    <select
+                                                        value={order.orderStatus || 'Processing'}
+                                                        onChange={(e) => handleStatusChange(order._id, e.target.value)}
+                                                        className={`border rounded px-2 py-1 text-sm font-medium ${order.orderStatus === 'Delivered' ? 'text-green-600 border-green-200 bg-green-50' :
+                                                            order.orderStatus === 'Shipped' ? 'text-blue-600 border-blue-200 bg-blue-50' :
+                                                                order.orderStatus === 'Cancelled' ? 'text-red-600 border-red-200 bg-red-50' :
+                                                                    'text-yellow-600 border-yellow-200 bg-yellow-50'
+                                                            }`}
+                                                    >
+                                                        <option value="Processing">Processing</option>
+                                                        <option value="Shipped">Shipped</option>
+                                                        <option value="Delivered">Delivered</option>
+                                                        <option value="Cancelled">Cancelled</option>
+                                                    </select>
+                                                </td>
+                                                <td className="p-4">
                                                     {order.isPaid ? (
                                                         <span className="inline-flex items-center gap-1 bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs font-semibold">
                                                             <FaCheck /> Paid
                                                         </span>
                                                     ) : (
-                                                        <span className="inline-flex items-center gap-1 bg-red-100 text-red-700 px-2 py-1 rounded-full text-xs font-semibold">
+                                                        <button
+                                                            onClick={() => handleMarkAsPaid(order._id)}
+                                                            className="inline-flex items-center gap-1 bg-red-100 text-red-700 px-2 py-1 rounded-full text-xs font-semibold hover:bg-red-200"
+                                                            title="Click to mark as Paid"
+                                                        >
                                                             <FaTimes /> Pending
-                                                        </span>
+                                                        </button>
                                                     )}
                                                 </td>
                                                 <td className="p-4 text-sm text-gray-500">

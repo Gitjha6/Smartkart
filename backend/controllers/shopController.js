@@ -102,4 +102,9 @@ const updateShop = asyncHandler(async (req, res) => {
     }
 });
 
+
+
+// @desc    Get shops nearby
+// @route   GET /api/shops/nearby
+// @access  Public
 module.exports = { createShop, getShopById, updateShop };

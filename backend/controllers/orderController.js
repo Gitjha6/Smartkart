@@ -118,10 +118,59 @@ const getShopOrders = asyncHandler(async (req, res) => {
     res.json(orders);
 });
 
+// @desc    Update order status
+// @route   PUT /api/orders/:id/status
+// @access  Private/Shopkeeper
+const updateOrderStatus = asyncHandler(async (req, res) => {
+    const { status } = req.body;
+    const order = await Order.findById(req.params.id);
+
+    if (order) {
+        order.orderStatus = status;
+
+        if (status === 'Delivered') {
+            order.isDelivered = true;
+            order.deliveredAt = Date.now();
+        }
+
+        const updatedOrder = await order.save();
+        res.json(updatedOrder);
+    } else {
+        res.status(404);
+        throw new Error('Order not found');
+    }
+});
+
+// @desc    Mark order as paid (Shopkeeper manual override)
+// @route   PUT /api/orders/:id/pay/manual
+// @access  Private/Shopkeeper
+const markOrderAsPaid = asyncHandler(async (req, res) => {
+    const order = await Order.findById(req.params.id);
+
+    if (order) {
+        order.isPaid = true;
+        order.paidAt = Date.now();
+        order.paymentResult = {
+            id: 'manual',
+            status: 'completed',
+            update_time: Date.now(),
+            email_address: 'manual@shopkeeper',
+        };
+
+        const updatedOrder = await order.save();
+        res.json(updatedOrder);
+    } else {
+        res.status(404);
+        throw new Error('Order not found');
+    }
+});
+
 module.exports = {
     addOrderItems,
     getOrderById,
     updateOrderToPaid,
+    updateOrderStatus,
+    markOrderAsPaid,
     getMyOrders,
     getShopOrders,
 };

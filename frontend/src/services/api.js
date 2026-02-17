@@ -41,6 +41,8 @@ export const orderService = {
     payOrder: (id, paymentResult) => api.put(`/orders/${id}/pay`, paymentResult),
     getMyOrders: () => api.get('/orders/myorders'),
     getShopOrders: () => api.get('/orders/shop-orders'),
+    updateStatus: (id, status) => api.put(`/orders/${id}/status`, { status }),
+    markAsPaid: (id) => api.put(`/orders/${id}/pay/manual`),
 };
 
 export default api;
