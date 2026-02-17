@@ -104,19 +104,10 @@ const ShopDashboard = () => {
                     <p className="text-gray-600">Start selling to local customers in minutes.</p>
                 </div>
 
-                <form onSubmit={handleCreateShop} className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <input type="text" placeholder="Shop Name" className="border p-2 rounded w-full" value={shopName} onChange={e => setShopName(e.target.value)} required />
-                        <input type="text" placeholder="Description (e.g. Grocery, Electronics)" className="border p-2 rounded w-full" value={description} onChange={e => setDescription(e.target.value)} required />
-                    </div>
-                    <input type="text" placeholder="Address" className="border p-2 rounded w-full" value={address} onChange={e => setAddress(e.target.value)} required />
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <input type="text" placeholder="City" className="border p-2 rounded w-full" value={city} onChange={e => setCity(e.target.value)} required />
-                        <input type="text" placeholder="State" className="border p-2 rounded w-full" value={state} onChange={e => setState(e.target.value)} required />
-                        <input type="text" placeholder="Pincode" className="border p-2 rounded w-full" value={pincode} onChange={e => setPincode(e.target.value)} required />
-                    </div>
-                    <button type="submit" className="w-full bg-indigo-600 text-white font-bold py-3 rounded hover:bg-indigo-700 transition">Create Shop</button>
-                </form>
+                <ShopForm
+                    onSubmit={handleCreateShop}
+                    submitLabel="Create Shop"
+                />
             </div>
         );
     }
