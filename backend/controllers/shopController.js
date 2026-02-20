@@ -24,6 +24,9 @@ const createShop = asyncHandler(async (req, res) => {
         return res.status(200).json(shopExists);
     }
 
+    const lat = latitude ? Number(latitude) : 28.6139; // Default to New Delhi
+    const lng = longitude ? Number(longitude) : 77.2090;
+
     const shop = await Shop.create({
         owner: req.user._id,
         name,
@@ -34,7 +37,7 @@ const createShop = asyncHandler(async (req, res) => {
         description,
         location: {
             type: 'Point',
-            coordinates: [longitude, latitude], // GeoJSON format: [long, lat]
+            coordinates: [lng, lat], // GeoJSON format: [long, lat]
         },
     });
 
@@ -90,7 +93,7 @@ const updateShop = asyncHandler(async (req, res) => {
         if (latitude && longitude) {
             shop.location = {
                 type: 'Point',
-                coordinates: [longitude, latitude],
+                coordinates: [Number(longitude), Number(latitude)],
             };
         }
 

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const ShopForm = ({ initialData = {}, onSubmit, onCancel, submitLabel = "Save Details" }) => {
+const ShopForm = ({ initialData, onSubmit, onCancel, submitLabel = "Save Details" }) => {
     const [formData, setFormData] = useState({
         name: '',
         description: '',
