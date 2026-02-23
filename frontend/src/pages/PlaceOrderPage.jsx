@@ -123,10 +123,10 @@ const PlaceOrderPage = () => {
                     totalPrice: Number(totalPrice),
                 };
 
-                await orderService.create(orderData);
+                const { data } = await orderService.create(orderData);
                 clearCart();
                 alert('Order Placed Successfully!');
-                navigate(`/`);
+                navigate(`/order/${data._id}`);
             }
 
         } catch (error) {

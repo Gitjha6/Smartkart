@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { orderService } from '../services/api';
 import AuthContext from '../context/AuthContext';
 import { FaBox, FaTruck, FaMoneyBillWave, FaArrowLeft } from 'react-icons/fa';
+import StripeCheckout from '../components/StripeCheckout';
 
 const OrderDetailsPage = () => {
     const { id } = useParams();
@@ -66,6 +67,22 @@ const OrderDetailsPage = () => {
                         <div className={`mt-4 p-3 rounded-md text-sm font-medium border ${order.isPaid ? 'bg-green-50 border-green-200 text-green-700' : 'bg-red-50 border-red-200 text-red-700'}`}>
                             {order.isPaid ? `Paid on ${order.paidAt.substring(0, 10)}` : 'Not Paid'}
                         </div>
+
+                        {!order.isPaid && order.paymentMethod === 'Stripe' && user.role !== 'shopkeeper' && (
+                            <div className="mt-6 border-t pt-4">
+                                <StripeCheckout
+                                    orderId={order._id}
+                                    onSuccess={() => {
+                                        // Refresh the order details
+                                        const fetchOrder = async () => {
+                                            const { data } = await orderService.getOrderById(id);
+                                            setOrder(data);
+                                        };
+                                        fetchOrder();
+                                    }}
+                                />
+                            </div>
+                        )}
                     </div>
 
                     {/* Order Items */}

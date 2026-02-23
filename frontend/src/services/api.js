@@ -43,6 +43,7 @@ export const orderService = {
     getShopOrders: () => api.get('/orders/shop-orders'),
     updateStatus: (id, status) => api.put(`/orders/${id}/status`, { status }),
     markAsPaid: (id) => api.put(`/orders/${id}/pay/manual`),
+    createPaymentIntent: (id) => api.post(`/orders/${id}/create-payment-intent`),
 };
 
 export default api;
