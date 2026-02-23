@@ -22,7 +22,7 @@ api.interceptors.request.use(
 );
 
 export const productService = {
-    getAll: (keyword = '', pageNumber = '') => api.get(`/products?keyword=${keyword}&pageNumber=${pageNumber}`),
+    getAll: (keyword = '', pageNumber = '', category = '') => api.get(`/products?keyword=${encodeURIComponent(keyword)}&pageNumber=${pageNumber}&category=${encodeURIComponent(category)}`),
     getById: (id) => api.get(`/products/${id}`),
     create: (data) => api.post('/products', data), // Shopkeeper
     update: (id, data) => api.put(`/products/${id}`, data),

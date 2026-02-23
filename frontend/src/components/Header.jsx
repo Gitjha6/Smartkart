@@ -19,14 +19,14 @@ const Header = () => {
     return (
         <header className="bg-white sticky top-0 z-50 border-b border-gray-100">
             <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-                <Link to="/" className="flex items-center gap-2">
+                <a href="/" className="flex items-center gap-2">
                     <img src={logo} alt="SmartKart" className="h-16 md:h-20 object-contain" />
-                </Link>
+                </a>
 
                 <nav className="flex items-center space-x-6">
-                    <Link to="/" className="text-gray-600 hover:text-indigo-600 font-medium transition">
+                    <a href="/" className="text-gray-600 hover:text-indigo-600 font-medium transition">
                         Home
-                    </Link>
+                    </a>
 
                     <Link to="/cart" className="relative text-gray-600 hover:text-indigo-600 transition">
                         <FaShoppingCart className="text-2xl" />

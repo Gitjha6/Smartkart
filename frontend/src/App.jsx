@@ -13,6 +13,7 @@ import PlaceOrderPage from './pages/PlaceOrderPage';
 import MyOrdersPage from './pages/MyOrdersPage';
 import OrderDetailsPage from './pages/OrderDetailsPage';
 import ShopSettingsPage from './pages/ShopSettingsPage';
+import ProductDetailsPage from './pages/ProductDetailsPage';
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
                 <Route path="/order/:id" element={<OrderDetailsPage />} />
                 <Route path="/shop/dashboard" element={<ShopDashboard />} />
                 <Route path="/shop/settings" element={<ShopSettingsPage />} />
+                <Route path="/product/:id" element={<ProductDetailsPage />} />
               </Routes>
             </main>
             <footer className="bg-gray-800 text-white text-center py-4">

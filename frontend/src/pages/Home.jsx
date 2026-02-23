@@ -1,22 +1,26 @@
 import { useState, useEffect, useContext } from 'react';
+import { Link } from 'react-router-dom';
 import { productService } from '../services/api';
 import CartContext from '../context/CartContext';
 import { FaSearch, FaMapMarkerAlt, FaStore, FaShoppingCart } from 'react-icons/fa';
+import Categories from '../components/Categories';
 
 const Home = () => {
     const [keyword, setKeyword] = useState('');
+    const [category, setCategory] = useState('');
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(false);
     const { addToCart } = useContext(CartContext);
 
     useEffect(() => {
-        fetchProducts();
-    }, []);
+        // Fetch products when category changes
+        fetchProducts(keyword, 1, category);
+    }, [category]);
 
-    const fetchProducts = async (search = '') => {
+    const fetchProducts = async (search = '', page = 1, cat = '') => {
         setLoading(true);
         try {
-            const { data } = await productService.getAll(search);
+            const { data } = await productService.getAll(search, page, cat);
             setProducts(data.products);
         } catch (error) {
             console.error("Search failed", error);
@@ -27,7 +31,20 @@ const Home = () => {
 
     const handleSearch = (e) => {
         e.preventDefault();
+        setCategory(''); // Reset category when performing text search
         fetchProducts(keyword);
+    };
+
+    const handleCategorySelect = (selectedCat) => {
+        // Toggle category off if selecting the same one
+        if (category === selectedCat) {
+            setCategory('');
+            setKeyword('');
+            fetchProducts('');
+        } else {
+            setCategory(selectedCat);
+            setKeyword('');
+        }
     };
 
     const handleAddToCart = (product) => {
@@ -67,12 +84,19 @@ const Home = () => {
                 </form>
             </div>
 
+            {/* Categories Section */}
+            <Categories
+                onCategorySelect={handleCategorySelect}
+                selectedCategory={category}
+            />
 
 
             {/* Product Grid */}
-            <div className="mb-4 flex items-center gap-2 text-gray-600">
+            <div className="mb-4 flex items-center gap-2 text-gray-600 mt-6">
                 {/* Removed dummy location text to avoid confusion */}
-                <h2 className="text-2xl font-bold text-gray-800">Featured Products</h2>
+                <h2 className="text-2xl font-bold text-gray-800">
+                    {category ? `${category} Products` : "Featured Products"}
+                </h2>
             </div>
 
             {loading ? (
@@ -81,11 +105,17 @@ const Home = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                     {products.length === 0 ? (
                         <div className="col-span-full text-center py-10 bg-white rounded-lg">
-                            <p className="text-gray-500 text-lg">No products found matching your search.</p>
+                            <p className="text-gray-500 text-lg">
+                                {category
+                                    ? `No products found in the "${category}" category.`
+                                    : keyword
+                                        ? `No products found matching "${keyword}".`
+                                        : "No products available."}
+                            </p>
                         </div>
                     ) : (
                         products.map(product => (
-                            <div key={product._id} className="bg-white rounded-lg shadow-sm hover:shadow-lg transition duration-300 border border-gray-100 overflow-hidden group flex flex-col h-full">
+                            <Link to={`/product/${product._id}`} key={product._id} className="bg-white rounded-lg shadow-sm hover:shadow-lg transition duration-300 border border-gray-100 overflow-hidden group flex flex-col h-full">
                                 <div className="h-48 bg-gray-100 relative overflow-hidden flex-shrink-0">
                                     {product.image ? (
                                         <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
@@ -113,14 +143,17 @@ const Home = () => {
                                             <p className="text-xl font-bold text-gray-900">₹{product.price}</p>
                                         </div>
                                         <button
-                                            onClick={() => handleAddToCart(product)}
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                handleAddToCart(product);
+                                            }}
                                             className="bg-indigo-600 text-white hover:bg-indigo-700 px-3 py-2 rounded text-sm font-medium transition flex items-center gap-1 shadow-sm"
                                         >
                                             <FaShoppingCart /> Add
                                         </button>
                                     </div>
                                 </div>
-                            </div>
+                            </Link>
                         ))
                     )}
                 </div>
